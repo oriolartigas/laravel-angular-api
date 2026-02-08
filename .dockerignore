@@ -1,0 +1,44 @@
+# =========================================================
+# GLOBAL DOCKER IGNORE (Laravel & Angular - Dev & Prod)
+# =========================================================
+
+# --- Git ---
+.git
+.gitignore
+
+# --- Node & Dependencies ---
+node_modules/
+**/node_modules/
+angular/.angular/cache
+laravel/vendor/
+
+# --- Laravel Storage & Runtime ---
+laravel/storage/*.sqlite
+laravel/storage/*.key
+laravel/storage/framework/cache/*
+laravel/storage/framework/sessions/*
+laravel/storage/framework/views/*
+laravel/storage/logs/*
+laravel/bootstrap/cache/*.php
+laravel/.phpunit.result.cache
+
+# --- Laravel Configuration & Sensitive Files ---
+laravel/.env
+laravel/auth.json
+laravel/Homestead.json
+laravel/Homestead.yaml
+
+# --- Build Artifacts ---
+angular/dist
+dist/
+
+# --- Logs & Temp Files ---
+*.log
+*.tmp
+.cache/
+**/.cache/
+
+# --- Editor and IDE Files ---
+.idea
+.vscode
+.DS_Store

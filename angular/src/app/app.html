@@ -1,0 +1,43 @@
+<mat-toolbar color="primary" class="fixed-toolbar">
+  <img src="laravel_logo.jpg" alt="Laravel" class="laravel-logo" />
+  <img src="angular_logo.png" alt="Angular" class="angular-logo" />
+  <span>{{ title() }}</span>
+  <span class="version">{{ version }}</span>
+
+  <button mat-icon-button class="menu-button-mobile" (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="spacer"></span>
+
+  <div class="desktop-navigation-container navigation-buttons">
+    @for (item of menuItems; track item.title) {
+      <button mat-button [routerLink]="item.link" routerLinkActive="active-link">
+        {{ item.title }}
+      </button>
+    }
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="push" position="end" class="sidenav-menu">
+    <div class="mobile-navigation-container navigation-buttons">
+      @for (item of menuItems; track item.title) {
+        <button
+          mat-button
+          [routerLink]="item.link"
+          routerLinkActive="active-link"
+          (click)="sidenav.close()"
+        >
+          {{ item.title }}
+        </button>
+      }
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

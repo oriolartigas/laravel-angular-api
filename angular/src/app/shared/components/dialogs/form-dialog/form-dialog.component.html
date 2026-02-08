@@ -1,0 +1,23 @@
+<h3 mat-dialog-title>{{ title }}</h3>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" (ngSubmit)="save()" #formRef="ngForm">
+    <ng-content></ng-content>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="warn" type="button">
+    <mat-icon>close</mat-icon>
+    Cancel
+  </button>
+  <button
+    mat-raised-button
+    type="button"
+    color="primary"
+    (click)="formRef['ngSubmit'].emit()"
+    [disabled]="formGroup.invalid || formGroup.pristine"
+  >
+    <mat-icon>save</mat-icon>
+    Save
+  </button>
+</mat-dialog-actions>

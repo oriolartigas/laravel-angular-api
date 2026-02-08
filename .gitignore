@@ -1,0 +1,118 @@
+# ===============================
+# System files
+# ===============================
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Environment files
+# ===============================
+.env
+.env.development
+.env.production
+.env.staging
+
+# ===============================
+# Docker files
+# ===============================
+docker-compose.yaml
+
+# ===============================
+# IDEs and editors
+# ===============================
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+.history/*
+.fleet/
+.nova/
+.zed/
+.phpactor.json
+
+# ===============================
+# Node / Angular / npm / yarn
+# ===============================
+/node_modules
+npm-debug.log
+yarn-error.log
+/angular/node_modules
+/angular/dist
+/angular/npm-debug.log*
+/angular/yarn-error.log*
+/angular/coverage
+/angular/.angular/cache
+
+# ===============================
+# Laravel / PHP
+# ===============================
+/vendor
+/laravel/.editorconfig
+/laravel/vendor
+/laravel/node_modules
+/laravel/storage/
+/laravel/storage/*.key
+/laravel/public/hot
+/laravel/public/storage
+/laravel/.phpunit.result.cache
+/laravel/Homestead.json
+/laravel/Homestead.yaml
+/laravel/auth.json
+.phpunit.result.cache
+.phpunit.cache
+/auth.json
+Homestead.json
+Homestead.yaml
+/public/build
+/public/hot
+/public/storage
+/storage/pail
+
+# ===============================
+# Compiled / build output
+# ===============================
+/dist
+/out-tsc
+/bazel-out
+/__screenshots__/
+/coverage
+/.sass-cache/
+/connect.lock
+/libpeerconnection.log
+/testem.log
+/typings
+/.angular/cache
+
+# ===============================
+# Logs
+# ===============================
+*.log
+
+# ===============================
+# Tmp files
+# ===============================
+*.tmp
+/tmp
+
+# ===============================
+# Cursor files
+# ===============================
+.cursorrules
+
+# ===============================
+# Certificate files
+# ===============================
+
+*.pem
+
+# ===============================
+# Pre-commit / Python
+# ===============================
+.venv/
+.cache/pre-commit/
+.pre-commit-cache/
+/pre-commit

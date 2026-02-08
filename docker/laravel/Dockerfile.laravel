@@ -1,0 +1,158 @@
+# ===============================================================
+# STAGE 0: PHP Extensions Builder
+# This stage installs development headers, compiles necessary
+# PHP extensions, and cleans up to keep the final image slim.
+# ===============================================================
+FROM php:8.3-fpm-alpine AS builder
+
+# Compilation dependencies
+ENV BUILD_DEPS="libzip-dev oniguruma-dev postgresql-dev icu-dev libxml2-dev"
+
+# Install system dependencies and PHP extensions for Laravel and Postgres
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS $BUILD_DEPS \
+    && docker-php-ext-install bcmath mbstring exif pcntl opcache intl pdo_pgsql zip \
+    && apk del .build-deps
+
+# ===============================================================
+# STAGE 1: Base Runtime (Common for development and Production)
+# Defines the core environment, system users, and shared
+# configurations for PHP, and Supervisor.
+# ===============================================================
+FROM php:8.3-fpm-alpine AS base
+
+# Runtime dependencies
+RUN apk add --no-cache \
+    bash \
+    curl \
+    gettext \
+    icu-libs \
+    libzip \
+    postgresql-libs \
+    oniguruma \
+    supervisor
+
+# Copy compiled extensions and PHP config from stage 0
+COPY --from=builder /usr/local/lib/php/extensions /usr/local/lib/php/extensions
+COPY --from=builder /usr/local/etc/php/conf.d /usr/local/etc/php/conf.d
+
+# Copy PHP-FPM, Supervisor and entrypoint
+COPY docker/laravel/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY docker/laravel/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/laravel/entrypoint.laravel.sh /usr/local/bin/entrypoint.laravel.sh
+RUN chmod +x /usr/local/bin/entrypoint.laravel.sh
+
+WORKDIR /var/www/html
+
+# ===============================================================
+# STAGE 2: Production App Builder
+# Handles the installation of production PHP dependencies
+# using Composer without dev requirements.
+# ===============================================================
+FROM base AS build-production
+
+# Copy composer files first for cache
+COPY laravel/composer.json laravel/composer.lock ./
+
+# Install Composer from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy source code
+COPY laravel/ ./
+
+# Install dependencies (no dev)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+# ===============================================================
+# STAGE 3: Development (Target: development)
+# Specific stage for local development with debugging tools,
+# source code mounting capability, and dev dependencies.
+# ===============================================================
+FROM base AS development
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+ARG COMMIT_SHA
+
+ENV APP_VERSION=$COMMIT_SHA
+LABEL org.opencontainers.image.revision=$COMMIT_SHA
+
+# Install extra system dependencies for development
+RUN apk add --no-cache \
+    build-base \
+    git \
+    libxml2-dev \
+    postgresql-client \
+    unzip \
+    shadow \
+    zip
+
+# Install Composer from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Modify user and group IDs
+RUN usermod -u ${USER_ID} www-data && groupmod -g ${GROUP_ID} www-data
+
+# Create required Laravel directories
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/testing \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
+    database
+
+# Switch to the www-data user
+USER www-data
+
+# Install dependencies
+COPY --chown=www-data:www-data laravel/composer.* ./
+RUN composer install --no-interaction --no-scripts --no-autoloader
+
+# Copy files and remove cache exactly as in development file
+COPY --chown=www-data:www-data laravel/ .
+
+RUN rm -rf bootstrap/cache/*.php storage/framework/views/*.php \
+    && composer dump-autoload --optimize
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=15s --retries=5 \
+    CMD pgrep php-fpm || exit 1
+
+# ===============================================================
+# STAGE 4: Production Final (Target: production)
+# Final production-ready image. Contains only the runtime,
+# compiled assets, and optimized code, running as non-root.
+# ===============================================================
+FROM base AS production
+
+ARG COMMIT_SHA
+ENV APP_VERSION=$COMMIT_SHA
+LABEL org.opencontainers.image.revision=$COMMIT_SHA
+
+# Copy pre-built application from build-production stage
+COPY --from=build-production --chown=www-data:www-data /var/www/html /var/www/html
+
+# Create directories as root, before changing the user
+USER root
+
+# Prepare Laravel runtime directories and permissions (baseline when no volumes are mounted)
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/testing \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
+    database \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+RUN rm -f /var/www/html/bootstrap/cache/*.php
+
+USER www-data
+
+# Expose PHP-FPM port
+EXPOSE 9000
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=15s --retries=5 \
+  CMD pgrep php-fpm || exit 1

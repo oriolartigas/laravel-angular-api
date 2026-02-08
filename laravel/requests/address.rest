@@ -1,0 +1,47 @@
+### CREATE Address
+
+POST http://localhost:8080/api/addresses?with=user HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "user_id": 1,
+    "name": "Oficina",
+    "street": "Carrer de la Llibertat, 45",
+    "city": "Barcelona",
+    "state": "Catalunya",
+    "postal_code": "08012",
+    "country": "Spain",
+}
+
+### UPDATE Address with ID 1
+
+PUT http://localhost:8080/api/addresses/1?with=user HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "street": "Avinguda Diagonal, 600",
+    "city": "Barcelona",
+    "postal_code": "08021",
+}
+
+### GET user with ID 1
+
+GET http://localhost:8080/api/addresses/1?with=user HTTP/1.1
+Accept: application/json
+
+### DELETE user with ID 12
+
+DELETE http://localhost:8080/api/addresses/1 HTTP/1.1
+Accept: application/json
+
+### GET all users
+
+GET http://localhost:8080/api/addresses
+Accept: application/json
+
+### GET user with filters
+
+GET http://localhost:8080/api/addresses?where[postal_code]=08012&with=user&sort=-postal_code,city HTTP/1.1
+Accept: application/json

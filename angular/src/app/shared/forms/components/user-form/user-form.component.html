@@ -1,0 +1,98 @@
+<div class="create-dialog-form-content" [formGroup]="formGroup">
+  <mat-form-field appearance="outline">
+    <mat-label for="role">Role</mat-label>
+    <mat-select formControlName="role_ids" multiple>
+      @for (role of roles; track role.id) {
+        <mat-option [value]="role.id">{{ role.name }}</mat-option>
+      }
+    </mat-select>
+
+    @if (formGroup.get('role_ids')?.invalid && formGroup.get('role_ids')?.touched) {
+      <mat-error>
+        @if (formGroup.get('role_ids')?.errors?.['required']) {
+          Role is required
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="name">Name</mat-label>
+    <input matInput id="name" type="text" formControlName="name" />
+
+    @if (formGroup.get('name')?.invalid && formGroup.get('name')?.touched) {
+      <mat-error>
+        @if (formGroup.get('name')?.errors?.['required']) {
+          Name is required
+        }
+
+        @if (formGroup.get('name')?.errors?.['minlength']) {
+          Name must be at least 2 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="email">Email</mat-label>
+    <input matInput id="email" type="email" formControlName="email" />
+
+    @if (formGroup.get('email')?.invalid && formGroup.get('email')?.touched) {
+      <mat-error>
+        @if (formGroup.get('email')?.errors?.['required']) {
+          Email is required
+        }
+
+        @if (formGroup.get('email')?.errors?.['email']) {
+          Please enter a valid email address
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  @if (showPassword === true) {
+    <mat-form-field appearance="outline">
+      <mat-label for="password">Password</mat-label>
+      <input matInput id="password" type="password" formControlName="password" />
+
+      @if (formGroup.get('password')?.invalid && formGroup.get('password')?.touched) {
+        <mat-error>
+          @if (formGroup.get('password')?.errors?.['required']) {
+            Password is required
+          }
+
+          @if (formGroup.get('password')?.errors?.['minlength']) {
+            Password must be at least 8 characters
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label for="password_confirmation">Confirm Password</mat-label>
+      <input
+        matInput
+        id="password_confirmation"
+        type="password"
+        formControlName="password_confirmation"
+      />
+
+      @if (
+        formGroup.get('password_confirmation')?.invalid &&
+        formGroup.get('password_confirmation')?.touched
+      ) {
+        <mat-error>
+          @if (formGroup.get('password_confirmation')?.errors?.['required']) {
+            Password confirmation is required
+          }
+        </mat-error>
+      }
+
+      @if (
+        formGroup.errors?.['passwordMismatch'] && formGroup.get('password_confirmation')?.touched
+      ) {
+        <mat-error> Passwords do not match </mat-error>
+      }
+    </mat-form-field>
+  }
+</div>

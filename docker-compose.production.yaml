@@ -1,0 +1,39 @@
+---
+services:
+  laravel-service:
+    build:
+      target: production
+    container_name: laa-laravel-${APP_ENV:-production}
+    image: ghcr.io/oriolartigas/laa-laravel-${APP_ENV:-production}:${COMMIT_SHA:-latest}
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: "false"
+      QUEUE_CONNECTION: database
+    volumes:
+      - laravel_storage:/var/www/html/storage
+    command:
+      [/usr/bin/supervisord, -n, -c, /etc/supervisor/conf.d/supervisord.conf]
+
+  angular-service:
+    build:
+      target: production
+    container_name: laa-angular-${APP_ENV:-production}
+    image: ghcr.io/oriolartigas/laa-angular-${APP_ENV:-production}:${COMMIT_SHA:-latest}
+    command: nginx -g "daemon off;"
+
+  nginx-service:
+    build:
+      target: production
+    container_name: laa-nginx-${APP_ENV:-production}
+    image: ghcr.io/oriolartigas/laa-nginx-${APP_ENV:-production}:${COMMIT_SHA:-latest}
+    environment:
+      - APP_DOMAIN=${APP_DOMAIN}
+
+volumes:
+  laravel_storage:
+    name: laa_storage_data_${APP_ENV:-production}
+
+networks:
+  app-network:
+    name: laa_network_${APP_ENV:-production}
+    driver: bridge

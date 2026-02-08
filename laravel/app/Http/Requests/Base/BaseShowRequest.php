@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests\Base;
+
+use App\Rules\AllowedQueryRelations;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+abstract class BaseShowRequest extends FormRequest
+{
+    /**
+     * The service class associated with the request.
+     */
+    abstract public function getServiceClass(): string;
+
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        $service = app(abstract: (string) $this->getServiceClass());
+        $model = $service->getRepository()->getModel();
+
+        return [
+            'with' => [
+                'nullable',
+                'string',
+                'max:255',
+                new AllowedQueryRelations(model: $model, methodName: 'getWithable'),
+            ],
+
+            'withCount' => [
+                'nullable',
+                'string',
+                'max:255',
+                new AllowedQueryRelations(model: $model, methodName: 'getWithCountable'),
+            ],
+        ];
+    }
+}

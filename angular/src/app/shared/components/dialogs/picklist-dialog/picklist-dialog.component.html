@@ -1,0 +1,79 @@
+<h3 mat-dialog-title>{{ title }}</h3>
+<mat-dialog-content class="dialog-content">
+  <div class="table-container">
+    <app-entity-table
+      [data]="availableItems"
+      [config]="availableTableConfig"
+      [columns]="columns"
+      (rowSelected)="onAvailableSelectionChange($event)"
+      [selectedExternalItems]="selectedAvailableItems"
+      class="app-entity-table"
+    >
+    </app-entity-table>
+
+    <div class="transfer-btn-container">
+      <button
+        mat-mini-fab
+        class="transfer-btn"
+        [disabled]="availableItems.length === 0"
+        (click)="moveAllItemsToAssignedTable()"
+      >
+        <mat-icon>keyboard_double_arrow_right</mat-icon>
+      </button>
+
+      <button
+        mat-mini-fab
+        class="transfer-btn"
+        [disabled]="!hasItemsSelectedInAvailableTable"
+        (click)="moveItemsToAssignedTable()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+
+      <button
+        mat-mini-fab
+        class="transfer-btn"
+        [disabled]="!hasItemsSelectedInAssignedTable"
+        (click)="moveItemsToAvailableTable()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <button
+        mat-mini-fab
+        class="transfer-btn"
+        [disabled]="assignedItems.length === 0"
+        (click)="moveAllItemsToAvailableTable()"
+      >
+        <mat-icon>keyboard_double_arrow_left</mat-icon>
+      </button>
+    </div>
+
+    <app-entity-table
+      [data]="assignedItems"
+      [config]="assignedTableConfig"
+      [columns]="columns"
+      (rowSelected)="onAssignedSelectionChange($event)"
+      [selectedExternalItems]="selectedAssignedItems"
+      class="app-entity-table"
+    >
+    </app-entity-table>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="warn" type="button">
+    <mat-icon>close</mat-icon>
+    Cancel
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [disabled]="saveIsDisabled()"
+    (click)="save()"
+  >
+    <mat-icon>save</mat-icon>
+    Save
+  </button>
+</mat-dialog-actions>
