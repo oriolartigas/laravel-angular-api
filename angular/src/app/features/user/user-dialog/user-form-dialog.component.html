@@ -1,0 +1,45 @@
+<app-form-dialog [title]="title" [formGroup]="formGroup" (saveClicked)="formSaved($event)">
+  <form [formGroup]="formGroup">
+    <app-user-form
+      [formGroup]="formGroup"
+      [roles]="roles"
+      [showPassword]="showPassword"
+    ></app-user-form>
+
+    @if (action === FormAction.Create) {
+      <button
+        mat-raised-button
+        type="button"
+        color="primary"
+        (click)="addAddress()"
+        class="btn-add-address"
+      >
+        Add Address
+      </button>
+    }
+
+    <div formArrayName="addresses">
+      <mat-accordion>
+        @for (addrCtrl of addresses.controls; track addrCtrl; let i = $index) {
+          <mat-expansion-panel [formGroupName]="i">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Address {{ i + 1 }}</mat-panel-title>
+
+              <button
+                mat-icon-button
+                color="warn"
+                type="button"
+                (click)="removeAddress(i)"
+                class="btn-remove-address"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
+
+            <app-address-form [formGroup]="addrCtrl" [showUsers]="false"></app-address-form>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </div>
+  </form>
+</app-form-dialog>

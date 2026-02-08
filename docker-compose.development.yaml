@@ -1,0 +1,94 @@
+---
+x-common-args: &build-dev-args
+  args:
+    - USER_ID=${SERVER_UID:-1000}
+    - GROUP_ID=${SERVER_GID:-1000}
+
+services:
+  laravel-service:
+    build:
+      target: development
+      <<: *build-dev-args
+    container_name: laa-laravel-${APP_ENV:-development}
+    image: "laa-laravel-${APP_ENV:-development}:${COMMIT_SHA:-latest}"
+    user: "${SERVER_UID:-1000}:${SERVER_GID:-1000}"
+    tty: true
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_DEBUG: "true"
+      QUEUE_CONNECTION: sync
+    volumes:
+      - ./laravel:/var/www/html
+      - ./docker/laravel/entrypoint.laravel.sh:/usr/local/bin/entrypoint.laravel.sh
+    working_dir: /var/www/html
+    depends_on:
+      postgres-service:
+        condition: service_healthy
+
+  angular-service:
+    build:
+      target: development
+      <<: *build-dev-args
+    container_name: laa-angular-${APP_ENV:-development}
+    image: "laa-angular-${APP_ENV:-development}:${COMMIT_SHA:-latest}"
+    user: "${SERVER_UID:-1000}:${SERVER_GID:-1000}"
+    tty: true
+    volumes:
+      - ./angular:/app
+      - ./docker/angular/entrypoint.angular.sh:/usr/local/bin/entrypoint.angular.sh
+    working_dir: /app
+    entrypoint: [entrypoint.angular.sh]
+    command: >
+      npx ng serve
+      --host=0.0.0.0
+      --port=4200
+      --poll=2000
+      --allowed-hosts=all
+
+  nginx-service:
+    build:
+      target: development
+    container_name: laa-nginx-${APP_ENV:-development}
+    image: "laa-nginx-${APP_ENV:-development}:${COMMIT_SHA:-latest}"
+    tty: true
+    volumes:
+      - ./laravel:/var/www/html
+
+  postgres-service:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "${DB_DATABASE}"
+      POSTGRES_USER: "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
+    networks:
+      - app-network
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - |
+          PGPASSWORD="$$POSTGRES_PASSWORD" \
+          psql -h 127.0.0.1 -U "$${POSTGRES_USER}" \
+          -d "$${POSTGRES_DB}" -c "SELECT 1" >/dev/null 2>&1
+      interval: 10s
+      retries: 5
+      timeout: 5s
+      start_period: 10s
+
+volumes:
+  postgres_data:
+    name: laa_postgres_volume_${APP_ENV:-development}
+
+networks:
+  app-network:
+    name: laa-network-${APP_ENV:-development}
+    driver: bridge

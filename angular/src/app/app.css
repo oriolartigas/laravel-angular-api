@@ -1,0 +1,102 @@
+.fixed-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+
+  .version {
+    margin-left: 8px;
+    font-size: 14px;
+  }
+}
+
+.main-content {
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.menu-button-mobile {
+  display: none;
+}
+
+.desktop-navigation-container {
+  display: flex;
+  gap: 8px;
+}
+
+.desktop-navigation-container button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navigation-buttons button {
+  border-radius: 4px;
+  color: white;
+}
+
+.navigation-buttons button.active-link {
+  color: yellow;
+}
+
+.laravel-logo,
+.angular-logo {
+  height: 30px;
+  margin-right: 12px;
+}
+
+.sidenav-container {
+  margin-top: 56px;
+  height: calc(100vh - 56px);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/**** MOBILE / TABLET VERSION *****/
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 1rem;
+  }
+}
+
+/**** MOBILE VERSION *****/
+@media (max-width: 768px) {
+  .desktop-navigation-container {
+    display: none;
+  }
+
+  .mobile-navigation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .mobile-navigation-container button {
+    background-color: #3f51b5 !important;
+  }
+
+  .menu-button-mobile {
+    display: block;
+    order: 1;
+  }
+
+  .laravel-logo,
+  .angular-logo {
+    height: 24px;
+    margin-right: 8px;
+  }
+
+  .fixed-toolbar span:not(.spacer) {
+    display: none;
+  }
+
+  .sidenav-menu {
+    width: 200px;
+  }
+}

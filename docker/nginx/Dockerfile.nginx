@@ -1,0 +1,49 @@
+# ===============================================================
+# STAGE 0: Base Nginx Setup
+# This stage starts from the official Nginx Alpine image and
+# removes the default configuration to prepare for custom files.
+# ===============================================================
+FROM nginx:stable-alpine AS base
+
+# Copy master Nginx config (non-root permissions and /tmp paths)
+COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
+
+RUN rm /etc/nginx/conf.d/default.conf && \
+  chown -R nginx:nginx /var/cache/nginx /var/log/nginx /etc/nginx
+
+# ===============================================================
+# STAGE 1: Development Configuration
+# This stage inherits from the base and injects the
+# development-specific Nginx configuration for local testing.
+# ===============================================================
+FROM base AS development
+
+COPY docker/nginx/gateway.development.conf /etc/nginx/conf.d/default.conf
+USER nginx
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1:8080/ || exit 1
+
+# ===============================================================
+# STAGE 2: Production Configuration
+# This stage inherits from the base and injects the
+# production-ready Nginx configuration for the live environment.
+# ===============================================================
+FROM base AS production
+ENV APP_DOMAIN=localhost
+
+COPY docker/nginx/gateway.production.conf /etc/nginx/templates/default.conf.template
+
+USER root
+RUN chown -R nginx:nginx /etc/nginx/conf.d
+USER nginx
+
+# Define the output directory where the processed template will be generated.
+ENV NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1:8080/ || exit 1

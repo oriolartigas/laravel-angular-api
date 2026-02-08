@@ -1,0 +1,40 @@
+# ===============================
+# Line endings normalization
+# ===============================
+* text=auto eol=lf
+
+# ===============================
+# Diff settings by file type
+# ===============================
+# PHP / Blade templates
+*.php diff=php
+*.blade.php diff=html
+
+# HTML / CSS / JS / TS
+*.html diff=html
+*.css diff=css
+*.js diff=javascript
+*.ts diff=typescript
+
+# Markdown / documentation
+*.md diff=markdown
+
+# ===============================
+# Export-ignore for packaging / archives
+# ===============================
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore
+
+# Node / frontend build artifacts
+/angular/node_modules export-ignore
+/dist export-ignore
+
+# Laravel / PHP build artifacts
+/laravel/vendor export-ignore
+/vendor export-ignore
+/node_modules export-ignore
+/public/build export-ignore
+/public/hot export-ignore
+/public/storage export-ignore
+/storage/*.key export-ignore

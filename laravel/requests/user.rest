@@ -1,0 +1,62 @@
+### CREATE User
+
+POST http://localhost:8080/api/users?with=addresses&withCount=addresses,roles HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Anna Mas",
+    "email": "anna.mas@nouexemple.com",
+    "password": "contrasenya_segura123",
+    "password_confirmation": "contrasenya_segura123",
+    "role_ids": [2],
+    "addresses": [
+        {
+            "street": "Carrer de la Ciència, 1",
+            "city": "Barcelona",
+            "postal_code": "08018",
+            "country": "Spain",
+        },
+        {
+            "street": "Apartament de Vacances, 10",
+            "city": "Tarragona",
+            "postal_code": "43001",
+            "country": "Spain",
+        }
+    ]
+}
+
+### UPDATE User with ID 10
+
+PUT http://localhost:8080/api/users/10?with=addresses&withCount=addresses,roles HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "role_ids": [2]
+}
+
+### UPDATE User's role with ID 1
+
+PUT http://localhost:8080/api/users/1?with=addresses&withCount=addresses,roles HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "role_ids": [2]
+}
+
+### GET user with ID 12
+
+GET http://localhost:8080/api/users/12?with=roles,addresses&withCount=addresses,roles HTTP/1.1
+Accept: application/json
+
+### DELETE user with ID 12
+
+DELETE http://localhost:8080/api/users/12?withCount=addresses,roles HTTP/1.1
+Accept: application/json
+
+### GET users
+
+GET http://localhost:8080/api/users?where[name]=Anna%20Mas&with=roles&withCount=addresses&sort=+roles_count,name
+Accept: application/json

@@ -1,0 +1,63 @@
+---
+x-common-args: &build-args
+  args:
+    - COMMIT_SHA=${COMMIT_SHA}
+
+x-logging-default: &logging-default
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
+services:
+  laravel-service:
+    build:
+      context: .
+      dockerfile: docker/laravel/Dockerfile.laravel
+      <<: *build-args
+    environment:
+      APP_KEY: "${APP_KEY}"
+      APP_URL: "${APP_URL}"
+      DB_CONNECTION: "${DB_CONNECTION:-pgsql}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      DB_DATABASE: "${DB_DATABASE}"
+      DB_USERNAME: "${DB_USERNAME}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_SSLMODE: "${DB_SSLMODE}"
+    restart: unless-stopped
+    entrypoint: [/usr/local/bin/entrypoint.laravel.sh]
+    command: php-fpm
+    logging: *logging-default
+    networks:
+      - app-network
+
+  angular-service:
+    build:
+      context: .
+      dockerfile: docker/angular/Dockerfile.angular
+      <<: *build-args
+    restart: unless-stopped
+    logging: *logging-default
+    networks:
+      - app-network
+    depends_on:
+      laravel-service:
+        condition: service_healthy
+
+  nginx-service:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.nginx
+    command: [nginx, -g, daemon off;]
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-80}:8080"
+    logging: *logging-default
+    networks:
+      - app-network
+    depends_on:
+      laravel-service:
+        condition: service_healthy
+      angular-service:
+        condition: service_healthy

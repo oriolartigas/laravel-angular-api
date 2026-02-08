@@ -1,0 +1,20 @@
+<div class="entity-page-inner-wrapper">
+  <div>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      {{ createButtonLabel }}
+    </button>
+  </div>
+
+  <div class="table-container">
+    <app-entity-table
+      [data]="items"
+      [config]="tableConfig"
+      [columns]="columns"
+      (rowEdited)="openEditDialog($event)"
+      (rowDeleted)="deleteItem($event)"
+      [highlightItemId]="highlightItemId"
+    >
+    </app-entity-table>
+  </div>
+</div>
