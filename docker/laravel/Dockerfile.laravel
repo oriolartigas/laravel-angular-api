@@ -154,5 +154,5 @@ USER www-data
 # Expose PHP-FPM port
 EXPOSE 9000
 
-HEALTHCHECK --interval=10s --timeout=3s --start-period=15s --retries=5 \
+HEALTHCHECK --interval=10s --timeout=3s --start-period=120s --retries=12 \
   CMD pgrep php-fpm || exit 1
