@@ -1,0 +1,5 @@
+<app-form-dialog [title]="title" [formGroup]="formGroup" (saveClicked)="formSaved($event)">
+  <form [formGroup]="formGroup">
+    <app-role-form [formGroup]="formGroup" [users]="users"></app-role-form>
+  </form>
+</app-form-dialog>

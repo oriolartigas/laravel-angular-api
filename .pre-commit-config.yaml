@@ -1,0 +1,93 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: detect-private-key
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.10
+    hooks:
+      - id: actionlint
+
+  - repo: https://github.com/bridgecrewio/checkov
+    rev: 3.2.500
+    hooks:
+      - id: checkov
+        stages: [manual]
+
+  # - repo: https://github.com/google/osv-scanner/
+  #   rev: v2.3.2
+  #   hooks:
+  #     - id: osv-scanner
+  #       stages: [manual]
+
+  - repo: https://github.com/oxipng/oxipng
+    rev: v10.1.0
+    hooks:
+      - id: oxipng
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        additional_dependencies: [prettier@3.8.1]
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        exclude: >
+          (?x)^(
+            .github/workflows/deploy.yaml|
+            docker-compose.production.yaml
+          )$
+        args: [-d, "{rules: {line-length: disable}}"]
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.47.0
+    hooks:
+      - id: markdownlint
+        files: ^README\.md$
+        args:
+          - "--disable"
+          - "MD013"
+
+  - repo: https://github.com/AleksaC/hadolint-py
+    rev: v2.14.0
+    hooks:
+      - id: hadolint
+        files: ^docker/(angular|laravel)/Dockerfile
+        args:
+          - "--ignore=DL3018"
+          - "--ignore=SC2086"
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0-2
+    hooks:
+      - id: shfmt
+        args: [-i, "2", -ci, -sr]
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.11.0
+    hooks:
+      - id: shellcheck
+        exclude: ^docker/scripts/
+      - id: shellcheck
+        name: shellcheck (docker/scripts with SC1090/SC1091 excluded)
+        files: ^docker/scripts/.*\.sh$
+        args: ["--exclude=SC1090,SC1091"]
+
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.93.1
+    hooks:
+      - id: trufflehog
+        stages: [manual]
+        args: [--only-verified]

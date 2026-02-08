@@ -1,0 +1,32 @@
+<div class="create-dialog-form-content" [formGroup]="formGroup">
+  <mat-form-field appearance="outline">
+    <mat-label for="user">User</mat-label>
+    <mat-select formControlName="user_ids" multiple>
+      @for (user of users; track user.id) {
+        <mat-option [value]="user.id">{{ user.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="name">Name</mat-label>
+    <input matInput id="name" type="text" formControlName="name" />
+
+    @if (formGroup.get('name')?.invalid && formGroup.get('name')?.touched) {
+      <mat-error>
+        @if (formGroup.get('name')?.errors?.['required']) {
+          Name is required
+        }
+
+        @if (formGroup.get('name')?.errors?.['minlength']) {
+          Name must be at least 2 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="description">Description</mat-label>
+    <input matInput id="description" type="text" formControlName="description" />
+  </mat-form-field>
+</div>

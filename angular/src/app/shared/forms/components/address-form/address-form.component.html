@@ -1,0 +1,118 @@
+<div class="create-dialog-form-content" [formGroup]="formGroup">
+  @if (showUsers === true) {
+    <mat-form-field appearance="outline">
+      <mat-label for="user">User</mat-label>
+      <mat-select id="user" formControlName="user_id">
+        @for (user of users; track user.id) {
+          <mat-option [value]="user.id">{{ user.name }}</mat-option>
+        }
+      </mat-select>
+
+      @if (formGroup.get('user_id')?.invalid && formGroup.get('user_id')?.touched) {
+        <mat-error>
+          @if (formGroup.get('user_id')?.errors?.['required']) {
+            User is required
+          }
+        </mat-error>
+      }
+    </mat-form-field>
+  }
+
+  <mat-form-field appearance="outline">
+    <mat-label for="name">Name</mat-label>
+    <input matInput id="name" type="text" formControlName="name" />
+
+    @if (formGroup.get('name')?.invalid && formGroup.get('name')?.touched) {
+      <mat-error>
+        @if (formGroup.get('name')?.errors?.['required']) {
+          Name is required
+        }
+
+        @if (formGroup.get('name')?.errors?.['minlength']) {
+          Name must be at least 3 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="street">Street</mat-label>
+    <input matInput id="street" type="text" formControlName="street" />
+
+    @if (formGroup.get('street')?.invalid && formGroup.get('street')?.touched) {
+      <mat-error>
+        @if (formGroup.get('street')?.errors?.['required']) {
+          Street is required
+        }
+
+        @if (formGroup.get('street')?.errors?.['minlength']) {
+          Street must be at least 3 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="city">City</mat-label>
+    <input matInput id="city" type="text" formControlName="city" />
+
+    @if (formGroup.get('city')?.invalid && formGroup.get('city')?.touched) {
+      <mat-error>
+        @if (formGroup.get('city')?.errors?.['required']) {
+          City is required
+        }
+
+        @if (formGroup.get('city')?.errors?.['minlength']) {
+          City must be at least 2 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="state">State</mat-label>
+    <input matInput id="state" type="text" formControlName="state" />
+
+    @if (formGroup.get('state')?.invalid && formGroup.get('state')?.touched) {
+      <mat-error>
+        @if (formGroup.get('state')?.errors?.['required']) {
+          State is required
+        }
+
+        @if (formGroup.get('state')?.errors?.['minlength']) {
+          State must be at least 2 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="postal_code">Postal Code</mat-label>
+    <input matInput id="postal_code" type="text" formControlName="postal_code" />
+
+    @if (formGroup.get('postal_code')?.invalid && formGroup.get('postal_code')?.touched) {
+      <mat-error>
+        @if (formGroup.get('postal_code')?.errors?.['required']) {
+          Postal code is required
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label for="country">Country</mat-label>
+    <input matInput id="country" type="text" formControlName="country" />
+
+    @if (formGroup.get('country')?.invalid && formGroup.get('country')?.touched) {
+      <mat-error>
+        @if (formGroup.get('country')?.errors?.['required']) {
+          Country is required
+        }
+
+        @if (formGroup.get('country')?.errors?.['minlength']) {
+          Country must be at least 2 characters
+        }
+      </mat-error>
+    }
+  </mat-form-field>
+</div>

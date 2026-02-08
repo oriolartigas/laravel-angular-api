@@ -1,0 +1,117 @@
+<div class="table-wrapper">
+  @if (config.caption) {
+    <div class="table-caption">{{ config.caption }}</div>
+  }
+
+  <div #scrollContainer class="table-scroll-wrapper">
+    <table>
+      <thead>
+        <tr>
+          @if (config.can_select) {
+            <th class="selectable-column"></th>
+          }
+
+          @for (column of visibleColumns; track column.key) {
+            <th>{{ column.label }}</th>
+          }
+
+          @if (config.can_edit || config.can_delete) {
+            <th class="action-column">Actions</th>
+          }
+        </tr>
+      </thead>
+      <tbody class="table-body-scrollable">
+        @for (item of data; track trackById(item)) {
+          <tr
+            (click)="toggleRowSelection($event, item)"
+            [class.highlight]="item.id === highlightItemId"
+            [attr.id]="'row-' + item.id"
+          >
+            @if (config.can_select) {
+              <td>
+                <input
+                  type="checkbox"
+                  [checked]="selectedExternalItems.includes(item)"
+                  (change)="toggleSelection(item)"
+                />
+              </td>
+            }
+
+            @for (column of visibleColumns; track column.key) {
+              <td [ngClass]="{ 'text-align-center': column.type === 'button' }">
+                @if (column.type === 'button') {
+                  @if (column.onClick) {
+                    <button mat-button (click)="column.onClick(item)">
+                      {{ getDisplayValue(item, column) }}
+                    </button>
+                  } @else {
+                    {{ getDisplayValue(item, column) }}
+                  }
+                } @else {
+                  {{ getDisplayValue(item, column) }}
+                }
+              </td>
+            }
+
+            @if (config.can_edit || config.can_delete) {
+              <td class="action-column">
+                <div class="action-buttons">
+                  @if (config.can_edit) {
+                    <button mat-button color="primary" (click)="edit(item)">
+                      <mat-icon>edit</mat-icon>
+                      Edit
+                    </button>
+                  }
+
+                  @if (config.can_delete) {
+                    <button mat-button color="warn" (click)="delete(item)">
+                      <mat-icon>delete</mat-icon>
+                      Delete
+                    </button>
+                  }
+                </div>
+              </td>
+            }
+          </tr>
+        }
+
+        <tr class="filler-row" [class.hidden-row]="data.length > 0">
+          <td
+            [attr.colspan]="
+              (config.can_select ? 1 : 0) +
+              columns.length +
+              (config.can_edit || config.can_delete ? 1 : 0)
+            "
+            class="filler-cell"
+          >
+            No items found.
+          </td>
+        </tr>
+
+        <tr class="filler-row" [class.hidden-row]="data.length === 0">
+          <td
+            [attr.colspan]="
+              (config.can_select ? 1 : 0) +
+              columns.length +
+              (config.can_edit || config.can_delete ? 1 : 0)
+            "
+            class="filler-cell"
+          ></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td
+            [attr.colspan]="
+              (config.can_select ? 1 : 0) +
+              columns.length +
+              (config.can_edit || config.can_delete ? 1 : 0)
+            "
+          >
+            Total rows: {{ data.length }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

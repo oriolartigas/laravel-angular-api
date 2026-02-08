@@ -1,0 +1,312 @@
+---
+# -----------------------------------------------------------------------------
+# Workflow behavior summary
+#
+# Triggers:
+# - pull_request (opened, synchronize) to develop or main:
+#   - Runs BUILD + DEPLOY to STAGING.
+#   - This applies to:
+#     - feature -> develop PRs
+#     - develop -> main PRs
+#
+# - push to develop:
+#   - Runs BUILD + DEPLOY to STAGING (typically after merging a PR into develop).
+#
+# - push to main:
+#   - Runs BUILD + DEPLOY to PRODUCTION (typically after merging a PR into main).
+#
+# Concurrency:
+# - Pull requests:
+#   - Cancel in-progress runs for the SAME PR when new commits arrive.
+#
+# - Push events:
+#   - Never cancel. Runs are queued per branch (Avoids interrupting a deployment).
+#
+# -----------------------------------------------------------------------------
+
+"name": CI/CD Pipeline
+"on":
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main, develop]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{
+      github.event_name == 'pull_request'
+        && format('pr-{0}', github.event.pull_request.number)
+        || format('push-{0}', github.ref_name)
+    }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  packages: write
+  checks: write
+  pull-requests: write
+
+env:
+  # App
+  APP_ENV: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'production' || 'staging' }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'production' || 'staging' }}
+    env:
+      APP_KEY: ${{ secrets.APP_KEY }}
+      APP_DOMAIN: ${{ vars.APP_DOMAIN }}
+      APP_URL: http://$APP_DOMAIN
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_PORT: ${{ vars.DB_PORT }}
+      DB_SSLMODE: ${{ vars.DB_SSLMODE }}
+    outputs:
+      commit_sha: ${{ steps.versioning.outputs.sha }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set Versioning
+        id: versioning
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          echo "COMMIT_SHA=$SHA" >> "$GITHUB_ENV"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Merge Docker Compose files
+        run: |
+          docker compose -f docker-compose.base.yaml -f docker-compose.production.yaml config --no-interpolate > docker-compose.yaml
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.16.0"
+          cache: npm
+          cache-dependency-path: |
+            angular/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10.8
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.21.0
+          cache: true
+
+      - name: Pre-commit cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-precommit-
+
+      - name: Node Modules cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Angular Dependencies
+        working-directory: ./angular
+        run: npm ci
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Pre-commit (all files)
+        run: |
+          # Execute linters
+          pre-commit run --all-files
+          # Execute security checks
+          pre-commit run --all-files --hook-stage manual
+
+      - name: Run Angular Tests
+        working-directory: ./angular
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessNoSandbox
+
+      - name: Build Angular (for Docker Cache)
+        working-directory: ./angular
+        run: npm run build -- --configuration production --output-hashing=all
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, xml, ctype, iconv, sqlite3, pdo_sqlite
+
+      - name: Install Laravel Dependencies
+        working-directory: ./laravel
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Prepare Test Environment
+        working-directory: ./laravel
+        run: |
+          cp .env.example .env
+          mkdir -p database
+          touch database/database.sqlite
+          php artisan migrate --force --env=testing
+          php artisan test --env=testing
+        env:
+          APP_ENV: testing
+          APP_KEY: ${{ secrets.APP_KEY }}
+          APP_URL: http://localhost
+          ASSET_URL: http://localhost
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+
+      - name: Build Docker Images
+        run: |
+          echo "Building images for version: $COMMIT_SHA"
+          docker compose build
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Images to Registry
+        run: |
+          echo "Pushing images to GitHub Container Registry..."
+          docker compose push
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'production' || 'staging' }}
+    env:
+      APP_KEY: ${{ secrets.APP_KEY }}
+      APP_DOMAIN: ${{ vars.APP_DOMAIN }}
+      APP_URL: http://$APP_DOMAIN
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_PORT: ${{ vars.DB_PORT }}
+      DB_SSLMODE: ${{ vars.DB_SSLMODE }}
+      SSH_HOST: &ssh-host ${{ vars.SERVER_IP }}
+      SSH_USER: &ssh-user ${{ secrets.SERVER_USERNAME }}
+      SSH_KEY: &ssh-key ${{ secrets.SERVER_SSH_KEY }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Merge Docker Compose files
+        run: |
+          docker compose -f docker-compose.base.yaml -f docker-compose.production.yaml config --no-interpolate > docker-compose.yaml
+
+      - name: Generate Base .env
+        run: |
+          cat > .env <<EOF
+          COMPOSE_PROJECT_NAME=laa-${{ env.APP_ENV }}
+          APP_ENV=${{ env.APP_ENV }}
+          APP_KEY=${{ env.APP_KEY }}
+          APP_DOMAIN=${{ env.APP_DOMAIN }}
+          APP_URL=${{ env.APP_URL }}
+          COMMIT_SHA=${{ needs.build.outputs.commit_sha }}
+          DB_HOST=${{ env.DB_HOST }}
+          DB_PORT=${{ env.DB_PORT }}
+          DB_DATABASE=${{ env.DB_DATABASE }}
+          DB_USERNAME=${{ env.DB_USERNAME }}
+          DB_PASSWORD=${{ env.DB_PASSWORD }}
+          DB_SSLMODE=${{ vars.DB_SSLMODE }}
+          EOF
+
+      - name: Copy Configuration to Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: *ssh-host
+          username: *ssh-user
+          key: *ssh-key
+          source: docker-compose.yaml,.env
+          target: ${{ vars.DEPLOY_PATH }}
+          # Clean the directory
+          rm: true
+
+      - name: Remote Deployment via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: *ssh-host
+          username: *ssh-user
+          key: *ssh-key
+          script: |
+            set -e
+            cd ${{ vars.DEPLOY_PATH }}
+
+            chmod 600 .env docker-compose.yaml
+
+            VOLUME_NAME="laa_storage_data_${{ env.APP_ENV }}"
+            LARAVEL_IMAGE="ghcr.io/oriolartigas/laa-laravel-${{ env.APP_ENV }}:${{ needs.build.outputs.commit_sha }}"
+
+            docker compose -f docker-compose.yaml config > /dev/null
+            docker compose -f docker-compose.yaml pull
+            docker volume create "$VOLUME_NAME" >/dev/null
+
+            # Detect www-data UID/GID inside the image
+            GET_UID_GID='printf "%s:%s" "$(id -u www-data)" "$(id -g www-data)"'
+            UID_GID="$(docker run --rm "$LARAVEL_IMAGE" sh -lc "$GET_UID_GID")"
+            echo "Detected www-data UID:GID: $UID_GID"
+
+            # Fix volume ownership + perms so the container user can write logs/cache
+            docker run --rm -v "${VOLUME_NAME}:/v" alpine sh -lc \
+              "mkdir -p \
+                /v/logs \
+                /v/framework/cache \
+                /v/framework/sessions \
+                /v/framework/views \
+                /v/framework/testing \
+              && chown -R ${UID_GID} /v \
+              && chmod -R ug+rwX /v"
+
+            docker compose -f docker-compose.yaml up -d --wait --remove-orphans
+            docker image prune -f
+
+  notify:
+    name: Notify Slack
+    needs: [build, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify to Slack
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: "#all-laravel-angular-api"
+          SLACK_COLOR: >
+            ${{ (needs.build.result == 'success'
+            && (needs.deploy.result == 'success'
+            || needs.deploy.result == 'skipped'))
+            && 'good'
+            || 'danger' }}
+          SLACK_TITLE: Pipeline Status - ${{ github.ref_name }}
+          SLACK_USERNAME: GitHub Bot
+          SLACK_DEPLOY_STATUS: >
+            ${{ needs.deploy.result == 'skipped'
+            && 'Not required'
+            || needs.deploy.result }}
+          SLACK_RESULT: >
+            ${{ (needs.build.result == 'success'
+            && (needs.deploy.result == 'success'
+            || needs.deploy.result == 'skipped'))
+            && '🚀 All systems go!'
+            || '⚠️ Something failed' }}
+          SLACK_MESSAGE: |
+            *Workflow:* ${{ github.workflow }}
+            *Branch:* `${{ github.ref_name }}`
+            *Build Status:* ${{ needs.build.result }}
+            *Deploy Status:* ${{ env.SLACK_DEPLOY_STATUS }}
+            *Result:* ${{ env.SLACK_RESULT }}
