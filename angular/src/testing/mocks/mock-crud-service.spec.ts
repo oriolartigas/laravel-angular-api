@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { HttpResponseData } from '../../app/core/types/api.interface';
-import { Entity } from '../../app/shared/entities/base/entity.interface';
+import { HttpResponseData } from '@core/types/api.interface';
+import { Entity } from '@shared/entities/base/entity.interface';
 import { EntityFactory } from '../factories/base/entity.factory';
 
 /**

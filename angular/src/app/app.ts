@@ -9,12 +9,13 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { take } from 'rxjs';
 
 // Import services
-import { ApiService } from './core/services/api.service';
-import { ScreenSizeService } from './core/services/screen-size.service';
+import { ApiService } from '@core/services/api.service';
+import { ScreenSizeService } from '@core/services/screen-size.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 
 // Import types
-import { HttpResponseData } from './core/types/api.interface';
-import { ScreenSize } from './core/types/types';
+import { HttpResponseData } from '@core/types/api.interface';
+import { ScreenSize } from '@core/types/types';
 
 export interface VersionResponse {
   version: string;
@@ -30,6 +31,7 @@ export interface VersionResponse {
     MatIconModule,
     MatSidenavModule,
     MatSnackBarModule,
+    SpinnerComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

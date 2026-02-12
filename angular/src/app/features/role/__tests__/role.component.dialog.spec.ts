@@ -9,8 +9,8 @@ import { RoleEntityFactory } from '../../../../testing/factories/role-entity.fac
 import { UserEntityFactory } from '../../../../testing/factories/user-entity.factory';
 import { mockServiceClass } from '../../../../testing/mocks/mock-crud-service.spec';
 import { mockFormDialog } from '../../../../testing/mocks/mocks.spec';
-import { RoleService } from '../../../shared/services/role.service';
-import { UserService } from '../../../shared/services/user.service';
+import { RoleService } from '@shared/services/entities/role.service';
+import { UserService } from '@shared/services/entities/user.service';
 import { RoleComponentTest } from './role.component.test';
 
 /**

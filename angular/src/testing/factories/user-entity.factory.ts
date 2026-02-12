@@ -1,4 +1,4 @@
-import { User } from '../../app/shared/entities/user.interface';
+import { User } from '@shared/entities/user.interface';
 import { EntityFactory } from './base/entity.factory';
 
 /**

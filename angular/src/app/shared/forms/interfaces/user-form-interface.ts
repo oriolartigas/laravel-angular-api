@@ -1,5 +1,5 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { AddressFormControls } from '../../../shared/forms/interfaces/address-form-interface';
+import { AddressFormControls } from '@shared/forms/interfaces/address-form-interface';
 
 /**
  * Controls of the address form

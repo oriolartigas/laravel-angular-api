@@ -6,19 +6,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { take } from 'rxjs';
 
 // Import types
-import { HttpResponseData } from '../../../core/types/api.interface';
-import { Role } from '../../../shared/entities/role.interface';
-import { User } from '../../../shared/entities/user.interface';
-import { FormAction } from '../../../shared/types/types';
+import { HttpResponseData } from '@core/types/api.interface';
+import { Role } from '@shared/entities/role.interface';
+import { User } from '@shared/entities/user.interface';
+import { FormAction } from '@shared/types/types';
 
 // Import services
-import { RoleFormFactory } from '../../../shared/forms/factories/role-form.factory';
-import { UserService } from '../../../shared/services/user.service';
+import { RoleFormFactory } from '@shared/forms/factories/role-form.factory';
+import { UserService } from '@shared/services/entities/user.service';
 
 // Import components
-import { FormDialogAbstract } from '../../../shared/components/dialogs/form-dialog/form-dialog.abstract';
-import { FormDialogComponent } from '../../../shared/components/dialogs/form-dialog/form-dialog.component';
-import { RoleFormComponent } from '../../../shared/forms/components/role-form/role-form.component';
+import { FormDialogAbstract } from '@shared/components/dialogs/form-dialog/form-dialog.abstract';
+import { FormDialogComponent } from '@shared/components/dialogs/form-dialog/form-dialog.component';
+import { RoleFormComponent } from '@shared/forms/components/role-form/role-form.component';
 
 @Component({
   selector: 'app-role-form-dialog',

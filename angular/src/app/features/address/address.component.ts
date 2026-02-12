@@ -5,17 +5,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 // Import types
-import { OptionalQueryParams } from '../../core/types/api.interface';
-import { Address } from '../../shared/entities/address.interface';
-import { User } from '../../shared/entities/user.interface';
-import { ColumnType, TableColumn } from '../../shared/types/entity-table.interface';
+import { OptionalQueryParams } from '@core/types/api.interface';
+import { Address } from '@shared/entities/address.interface';
+import { User } from '@shared/entities/user.interface';
+import { ColumnType, TableColumn } from '@shared/types/entity-table.interface';
 
 // Import services
-import { AddressService } from '../../shared/services/address.service';
+import { AddressService } from '@shared/services/entities/address.service';
 
 // Import components
-import { EntityPageComponent } from '../../shared/components/entity-page/entity-page.component';
-import { EntityTableComponent } from '../../shared/components/entity-table/entity-table.component';
+import { EntityPageComponent } from '@shared/components/entity-page/entity-page.component';
+import { EntityTableComponent } from '@shared/components/entity-table/entity-table.component';
 import { AddressFormDialogComponent } from './address-dialog/address-form-dialog.component';
 
 @Component({
