@@ -31,7 +31,10 @@ table {
   border-collapse: collapse;
 }
 
-thead, tbody, tfoot, tbody tr {
+thead,
+tbody,
+tfoot,
+tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
@@ -57,7 +60,9 @@ tfoot {
 }
 
 /* Grouped heights for header, footer and rows */
-thead tr, tfoot tr, tbody tr {
+thead tr,
+tfoot tr,
+tbody tr {
   height: 30px;
 }
 

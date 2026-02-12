@@ -31,7 +31,7 @@ export interface VersionResponse {
     MatIconModule,
     MatSidenavModule,
     MatSnackBarModule,
-    SpinnerComponent
+    SpinnerComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',

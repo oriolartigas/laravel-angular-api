@@ -5,7 +5,7 @@ import { SpinnerService } from '@shared/services/utils/spinner.service';
 @Component({
   selector: 'spinner',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [CommonModule],
   templateUrl: './spinner.component.html',
   styleUrl: './spinner.component.css',
 })
