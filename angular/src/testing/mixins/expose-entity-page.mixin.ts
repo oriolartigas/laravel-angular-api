@@ -1,6 +1,6 @@
-import { OptionalQueryParams } from '../../app/core/types/api.interface';
-import { Entity, Identifiable } from '../../app/shared/entities/base/entity.interface';
-import { TableColumn } from '../../app/shared/types/entity-table.interface';
+import { OptionalQueryParams } from '@core/types/api.interface';
+import { Entity, Identifiable } from '@shared/entities/base/entity.interface';
+import { TableColumn } from '@shared/types/entity-table.interface';
 
 /**
  * Interface defining the methods that a test harness exposes

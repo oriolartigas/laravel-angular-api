@@ -1,6 +1,6 @@
 ### CREATE User
 
-POST http://localhost:8080/api/users?with=addresses&withCount=addresses,roles HTTP/1.1
+POST http://localhost/api/users?with=addresses&withCount=addresses,roles HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -28,7 +28,7 @@ Accept: application/json
 
 ### UPDATE User with ID 10
 
-PUT http://localhost:8080/api/users/10?with=addresses&withCount=addresses,roles HTTP/1.1
+PUT http://localhost/api/users/10?with=addresses&withCount=addresses,roles HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -38,7 +38,7 @@ Accept: application/json
 
 ### UPDATE User's role with ID 1
 
-PUT http://localhost:8080/api/users/1?with=addresses&withCount=addresses,roles HTTP/1.1
+PUT http://localhost/api/users/1?with=addresses&withCount=addresses,roles HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -48,15 +48,15 @@ Accept: application/json
 
 ### GET user with ID 12
 
-GET http://localhost:8080/api/users/12?with=roles,addresses&withCount=addresses,roles HTTP/1.1
+GET http://localhost/api/users/12?with=roles,addresses&withCount=addresses,roles HTTP/1.1
 Accept: application/json
 
 ### DELETE user with ID 12
 
-DELETE http://localhost:8080/api/users/12?withCount=addresses,roles HTTP/1.1
+DELETE http://localhost/api/users/12?withCount=addresses,roles HTTP/1.1
 Accept: application/json
 
 ### GET users
 
-GET http://localhost:8080/api/users?where[name]=Anna%20Mas&with=roles&withCount=addresses&sort=+roles_count,name
+GET http://localhost/api/users?where[name]=Anna%20Mas&with=roles&withCount=addresses&sort=+roles_count,name
 Accept: application/json

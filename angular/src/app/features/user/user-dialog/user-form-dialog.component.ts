@@ -8,20 +8,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { take } from 'rxjs';
 
 // Import types
-import { HttpResponseData } from '../../../core/types/api.interface';
-import { Role } from '../../../shared/entities/role.interface';
-import { User } from '../../../shared/entities/user.interface';
-import { FormAction } from '../../../shared/types/types';
+import { HttpResponseData } from '@core/types/api.interface';
+import { Role } from '@shared/entities/role.interface';
+import { User } from '@shared/entities/user.interface';
+import { FormAction } from '@shared/types/types';
 
 // Import services
-import { UserFormFactory } from '../../../shared/forms/factories/user-form.factory';
-import { RoleService } from '../../../shared/services/role.service';
+import { UserFormFactory } from '@shared/forms/factories/user-form.factory';
+import { RoleService } from '@shared/services/entities/role.service';
 
 // Import components
-import { FormDialogAbstract } from '../../../shared/components/dialogs/form-dialog/form-dialog.abstract';
-import { FormDialogComponent } from '../../../shared/components/dialogs/form-dialog/form-dialog.component';
-import { AddressFormComponent } from '../../../shared/forms/components/address-form/address-form.component';
-import { UserFormComponent } from '../../../shared/forms/components/user-form/user-form.component';
+import { FormDialogAbstract } from '@shared/components/dialogs/form-dialog/form-dialog.abstract';
+import { FormDialogComponent } from '@shared/components/dialogs/form-dialog/form-dialog.component';
+import { AddressFormComponent } from '@shared/forms/components/address-form/address-form.component';
+import { UserFormComponent } from '@shared/forms/components/user-form/user-form.component';
 
 @Component({
   selector: 'app-user-form-dialog',

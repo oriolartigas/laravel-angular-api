@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { UserEntityFactory } from '../../../testing/factories/user-entity.factory';
-import { BaseCrudServiceSpec } from '../../../testing/services/base-crud.abstract.spec';
-import { ApiService } from '../../core/services/api.service';
-import { CrudService } from '../../core/services/crud.service';
-import { User } from '../entities/user.interface';
+import { UserEntityFactory } from '../../../../testing/factories/user-entity.factory';
+import { BaseCrudServiceSpec } from '../../../../testing/services/base-crud.abstract.spec';
+import { ApiService } from '@core/services/api.service';
+import { CrudService } from '@core/services/crud.service';
+import { User } from '../../entities/user.interface';
 import { UserService } from './user.service';
 
 const mockApiService = jasmine.createSpyObj('ApiService', ['get', 'post', 'put', 'delete']);

@@ -6,19 +6,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { take } from 'rxjs';
 
 // Import types
-import { HttpResponseData, OptionalQueryParams } from '../../core/types/api.interface';
-import { Role } from '../../shared/entities/role.interface';
-import { User } from '../../shared/entities/user.interface';
-import { ColumnType, TableColumn } from '../../shared/types/entity-table.interface';
-import { PicklistConfig } from '../../shared/types/picklist-dialog.interface';
+import { HttpResponseData, OptionalQueryParams } from '@core/types/api.interface';
+import { Role } from '@shared/entities/role.interface';
+import { User } from '@shared/entities/user.interface';
+import { ColumnType, TableColumn } from '@shared/types/entity-table.interface';
+import { PicklistConfig } from '@shared/types/picklist-dialog.interface';
 
 // Import services
-import { RoleService } from '../../shared/services/role.service';
-import { UserService } from '../../shared/services/user.service';
+import { RoleService } from '@shared/services/entities/role.service';
+import { UserService } from '@shared/services/entities/user.service';
 
 // Import components
-import { EntityPageComponent } from '../../shared/components/entity-page/entity-page.component';
-import { EntityTableComponent } from '../../shared/components/entity-table/entity-table.component';
+import { EntityPageComponent } from '@shared/components/entity-page/entity-page.component';
+import { EntityTableComponent } from '@shared/components/entity-table/entity-table.component';
 import { AddressDialogComponent } from './address-dialog/address-dialog.component';
 import { UserFormDialogComponent } from './user-dialog/user-form-dialog.component';
 

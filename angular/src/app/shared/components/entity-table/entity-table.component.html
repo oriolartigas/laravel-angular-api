@@ -75,36 +75,27 @@
           </tr>
         }
 
-        <tr class="filler-row" [class.hidden-row]="data.length > 0">
-          <td
-            [attr.colspan]="
-              (config.can_select ? 1 : 0) +
-              columns.length +
-              (config.can_edit || config.can_delete ? 1 : 0)
-            "
-            class="filler-cell"
-          >
-            No items found.
-          </td>
-        </tr>
-
-        <tr class="filler-row" [class.hidden-row]="data.length === 0">
-          <td
-            [attr.colspan]="
-              (config.can_select ? 1 : 0) +
-              columns.length +
-              (config.can_edit || config.can_delete ? 1 : 0)
-            "
-            class="filler-cell"
-          ></td>
-        </tr>
+        @if ((isLoading$ | async) === false && data.length === 0) {
+          <tr class="no-data-row" [class.hidden-row]="data.length > 0">
+            <td
+              [attr.colspan]="
+                (config.can_select ? 1 : 0) +
+                visibleColumns.length +
+                (config.can_edit || config.can_delete ? 1 : 0)
+              "
+              class="no-data-cell"
+            >
+              No items found.
+            </td>
+          </tr>
+        }
       </tbody>
       <tfoot>
         <tr>
           <td
             [attr.colspan]="
               (config.can_select ? 1 : 0) +
-              columns.length +
+              visibleColumns.length +
               (config.can_edit || config.can_delete ? 1 : 0)
             "
           >

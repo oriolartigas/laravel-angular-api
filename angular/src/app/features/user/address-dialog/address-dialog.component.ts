@@ -6,11 +6,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 
 // Import types
-import { User } from '../../../shared/entities/user.interface';
+import { User } from '@shared/entities/user.interface';
 
 // Import components
-import { Address } from '../../../shared/entities/address.interface';
-import { ColumnType, TableColumn } from '../../../shared/types/entity-table.interface';
+import { Address } from '@shared/entities/address.interface';
+import { ColumnType, TableColumn } from '@shared/types/entity-table.interface';
 import { AddressComponent } from '../../address/address.component';
 
 @Component({

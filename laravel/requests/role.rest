@@ -1,6 +1,6 @@
 ### CREATE Role
 
-POST http://localhost:8080/api/roles?with=users HTTP/1.1
+POST http://localhost/api/roles?with=users HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -11,7 +11,7 @@ Accept: application/json
 
 ### UPDATE Role with ID 3
 
-PUT http://localhost:8080/api/roles/3 HTTP/1.1
+PUT http://localhost/api/roles/3 HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -22,15 +22,15 @@ Accept: application/json
 
 ### GET role with ID 3
 
-GET http://localhost:8080/api/roles/3 HTTP/1.1
+GET http://localhost/api/roles/3 HTTP/1.1
 Accept: application/json
 
 ### DELETE Role with ID 3
 
-DELETE http://localhost:8080/api/roles/3 HTTP/1.1
+DELETE http://localhost/api/roles/3 HTTP/1.1
 Accept: application/json
 
 ### GET roles
 
-GET http://localhost:8080/api/roles?with=users&withCount=users&sort=name
+GET http://localhost/api/roles?with=users&withCount=users&sort=name
 Accept: application/json

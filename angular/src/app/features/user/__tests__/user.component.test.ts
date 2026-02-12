@@ -1,5 +1,5 @@
 import { ExposeEntityPageMethods } from '../../../../testing/mixins/expose-entity-page.mixin';
-import { User } from '../../../shared/entities/user.interface';
+import { User } from '@shared/entities/user.interface';
 import { UserComponent } from '../user.component';
 
 /**

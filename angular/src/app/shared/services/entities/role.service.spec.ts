@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { RoleEntityFactory } from '../../../testing/factories/role-entity.factory';
-import { BaseCrudServiceSpec } from '../../../testing/services/base-crud.abstract.spec';
-import { ApiService } from '../../core/services/api.service';
-import { CrudService } from '../../core/services/crud.service';
-import { Role } from '../entities/role.interface';
+import { RoleEntityFactory } from '../../../../testing/factories/role-entity.factory';
+import { BaseCrudServiceSpec } from '../../../../testing/services/base-crud.abstract.spec';
+import { ApiService } from '@core/services/api.service';
+import { CrudService } from '@core/services/crud.service';
+import { Role } from '../../entities/role.interface';
 import { RoleService } from './role.service';
 
 const mockApiService = jasmine.createSpyObj('ApiService', ['get', 'post', 'put', 'delete']);

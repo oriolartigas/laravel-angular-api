@@ -1,4 +1,4 @@
-import { Entity } from '../../../app/shared/entities/base/entity.interface';
+import { Entity } from '@shared/entities/base/entity.interface';
 
 export interface EntityFactoryInterface<T> {
   create(overrides?: Partial<T>): T;

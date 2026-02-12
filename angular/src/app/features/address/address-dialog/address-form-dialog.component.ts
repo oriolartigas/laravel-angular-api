@@ -6,19 +6,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { take } from 'rxjs';
 
 // Import types
-import { HttpResponseData } from '../../../core/types/api.interface';
-import { Address } from '../../../shared/entities/address.interface';
-import { User } from '../../../shared/entities/user.interface';
-import { FormAction } from '../../../shared/types/types';
+import { HttpResponseData } from '@core/types/api.interface';
+import { Address } from '@shared/entities/address.interface';
+import { User } from '@shared/entities/user.interface';
+import { FormAction } from '@shared/types/types';
 
 // Import services
-import { AddressFormFactory } from '../../../shared/forms/factories/address-form.factory';
-import { UserService } from '../../../shared/services/user.service';
+import { AddressFormFactory } from '@shared/forms/factories/address-form.factory';
+import { UserService } from '@shared/services/entities/user.service';
 
 // Import components
-import { FormDialogAbstract } from '../../../shared/components/dialogs/form-dialog/form-dialog.abstract';
-import { FormDialogComponent } from '../../../shared/components/dialogs/form-dialog/form-dialog.component';
-import { AddressFormComponent } from '../../../shared/forms/components/address-form/address-form.component';
+import { FormDialogAbstract } from '@shared/components/dialogs/form-dialog/form-dialog.abstract';
+import { FormDialogComponent } from '@shared/components/dialogs/form-dialog/form-dialog.component';
+import { AddressFormComponent } from '@shared/forms/components/address-form/address-form.component';
 
 @Component({
   selector: 'app-address-form-dialog',
