@@ -1,5 +1,5 @@
 import { ExposeEntityPageMethods } from '../../../../testing/mixins/expose-entity-page.mixin';
-import { Address } from '../../../shared/entities/address.interface';
+import { Address } from '@shared/entities/address.interface';
 import { AddressComponent } from '../address.component';
 
 /**

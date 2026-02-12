@@ -1,5 +1,5 @@
 import { ExposeEntityPageMethods } from '../../../../testing/mixins/expose-entity-page.mixin';
-import { Role } from '../../../shared/entities/role.interface';
+import { Role } from '@shared/entities/role.interface';
 import { RoleComponent } from '../role.component';
 
 /**

@@ -13,7 +13,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError, EMPTY, Observable, Subject, Subscription, switchMap, take, tap } from 'rxjs';
 
 // Import types
-import { HttpResponseData, OptionalQueryParams } from '../../../core/types/api.interface';
+import { HttpResponseData, OptionalQueryParams } from '@core/types/api.interface';
 import { Entity, Identifiable } from '../../entities/base/entity.interface';
 import { ColumnType, EntityTableConfig, TableColumn } from '../../types/entity-table.interface';
 import {
@@ -25,7 +25,7 @@ import {
 import { FormAction, HighlightRowId } from '../../types/types';
 
 // Import services
-import { CrudService } from '../../../core/services/crud.service';
+import { CrudService } from '@core/services/crud.service';
 import { PicklistDialogComponent } from '../dialogs/picklist-dialog/picklist-dialog.component';
 import { EntityTableComponent } from '../entity-table/entity-table.component';
 

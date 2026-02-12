@@ -4,10 +4,10 @@ import {
   EntityPageTestConfig,
   EntityPageTestSuite,
 } from '../../../../testing/utils/entity-page.spec';
-import { User } from '../../../shared/entities/user.interface';
-import { RoleService } from '../../../shared/services/role.service';
-import { UserService } from '../../../shared/services/user.service';
-import { ColumnType, TableColumn } from '../../../shared/types/entity-table.interface';
+import { User } from '@shared/entities/user.interface';
+import { RoleService } from '@shared/services/entities/role.service';
+import { UserService } from '@shared/services/entities/user.service';
+import { ColumnType, TableColumn } from '@shared/types/entity-table.interface';
 import { UserComponent } from '../user.component';
 import { UserComponentTest } from './user.component.test';
 

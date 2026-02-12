@@ -4,9 +4,9 @@ import {
   EntityPageTestConfig,
   EntityPageTestSuite,
 } from '../../../../testing/utils/entity-page.spec';
-import { Address } from '../../../shared/entities/address.interface';
-import { AddressService } from '../../../shared/services/address.service';
-import { ColumnType, TableColumn } from '../../../shared/types/entity-table.interface';
+import { Address } from '@shared/entities/address.interface';
+import { AddressService } from '@shared/services/entities/address.service';
+import { ColumnType, TableColumn } from '@shared/types/entity-table.interface';
 import { AddressComponent } from '../address.component';
 import { AddressComponentTest } from './address.component.test';
 

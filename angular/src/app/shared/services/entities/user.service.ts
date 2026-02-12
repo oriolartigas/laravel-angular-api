@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CrudService } from '../../core/services/crud.service';
-import { User } from '../entities/user.interface';
+import { CrudService } from '@core/services/crud.service';
+import { User } from '../../entities/user.interface';
 
 @Injectable({
   providedIn: 'root',

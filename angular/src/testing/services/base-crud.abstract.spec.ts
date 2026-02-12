@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { ApiService } from '../../app/core/services/api.service';
-import { CrudService } from '../../app/core/services/crud.service';
-import { HttpResponseData } from '../../app/core/types/api.interface';
-import { Entity, Identifiable } from '../../app/shared/entities/base/entity.interface';
+import { ApiService } from '@core/services/api.service';
+import { CrudService } from '@core/services/crud.service';
+import { HttpResponseData } from '@core/types/api.interface';
+import { Entity, Identifiable } from '@shared/entities/base/entity.interface';
 import { EntityFactory } from '../factories/base/entity.factory';
 
 /**

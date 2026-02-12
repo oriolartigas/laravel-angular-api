@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
-import { RoleService } from '../../../shared/services/role.service';
+import { RoleService } from '@shared/services/entities/role.service';
 import { UserFormDialogComponent } from './user-form-dialog.component';
 
 describe('UserFormDialogComponent', () => {

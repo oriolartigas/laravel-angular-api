@@ -1,4 +1,4 @@
-import { Role } from '../../app/shared/entities/role.interface';
+import { Role } from '@shared/entities/role.interface';
 import { EntityFactory } from './base/entity.factory'; // Import the abstract base class
 
 /**

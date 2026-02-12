@@ -20,12 +20,13 @@ import { Identifiable } from '../../entities/base/entity.interface';
 import { EntityTableConfig, TableColumn } from '../../types/entity-table.interface';
 
 // Import services
-import { ScreenSizeService } from '../../../core/services/screen-size.service';
+import { ScreenSizeService } from '@core/services/screen-size.service';
 
 // Import components
-import { ScreenSize } from '../../../core/types/types';
+import { ScreenSize } from '@core/types/types';
 import { HighlightRowId } from '../../types/types';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { SpinnerService } from '@shared/services/utils/spinner.service';
 
 @Component({
   selector: 'app-entity-table',
@@ -71,14 +72,16 @@ export class EntityTableComponent<T extends Identifiable> implements OnInit {
   /** Event emitted when the selection changes */
   @Output() rowSelected = new EventEmitter<T[]>();
 
-  /** Dialog service */
+  /** Services */
   private dialog = inject(MatDialog);
-
-  /** Screen size service */
   private screenSizeService: ScreenSizeService = inject(ScreenSizeService);
+  private readonly spinnerService = inject(SpinnerService);
 
   /** ID of the item to highlight */
   private _highlightItemId: number | undefined;
+
+  /** Expose the observable to the HTML */
+  protected isLoading$ = this.spinnerService.visibility$;
 
   /** Array of selected items */
   public selectedItems: T[] = [];

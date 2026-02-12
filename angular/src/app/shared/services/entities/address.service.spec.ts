@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { AddressEntityFactory } from '../../../testing/factories/address-entity.factory';
-import { BaseCrudServiceSpec } from '../../../testing/services/base-crud.abstract.spec';
-import { ApiService } from '../../core/services/api.service';
-import { CrudService } from '../../core/services/crud.service';
-import { Address } from '../entities/address.interface';
+import { AddressEntityFactory } from '../../../../testing/factories/address-entity.factory';
+import { BaseCrudServiceSpec } from '../../../../testing/services/base-crud.abstract.spec';
+import { ApiService } from '@core/services/api.service';
+import { CrudService } from '@core/services/crud.service';
+import { Address } from '../../entities/address.interface';
 import { AddressService } from './address.service';
 
 const mockApiService = jasmine.createSpyObj('ApiService', ['get', 'post', 'put', 'delete']);

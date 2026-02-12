@@ -192,6 +192,7 @@ jobs:
       APP_KEY: ${{ secrets.APP_KEY }}
       APP_DOMAIN: ${{ vars.APP_DOMAIN }}
       APP_URL: http://$APP_DOMAIN
+      NGINX_PORT: ${{ vars.NGINX_PORT }}
       DB_HOST: ${{ vars.DB_HOST }}
       DB_DATABASE: ${{ secrets.DB_DATABASE }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
@@ -217,6 +218,7 @@ jobs:
           APP_KEY=${{ env.APP_KEY }}
           APP_DOMAIN=${{ env.APP_DOMAIN }}
           APP_URL=${{ env.APP_URL }}
+          NGINX_PORT=${{ env.NGINX_PORT }}
           COMMIT_SHA=${{ needs.build.outputs.commit_sha }}
           DB_HOST=${{ env.DB_HOST }}
           DB_PORT=${{ env.DB_PORT }}

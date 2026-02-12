@@ -8,7 +8,7 @@ import { AddressEntityFactory } from '../../../../testing/factories/address-enti
 import { UserEntityFactory } from '../../../../testing/factories/user-entity.factory';
 import { mockServiceClass } from '../../../../testing/mocks/mock-crud-service.spec';
 import { mockFormDialog } from '../../../../testing/mocks/mocks.spec';
-import { UserService } from '../../../shared/services/user.service';
+import { UserService } from '@shared/services/entities/user.service';
 import { AddressComponentTest } from './address.component.test';
 
 describe('UserComponent Dialogs', () => {

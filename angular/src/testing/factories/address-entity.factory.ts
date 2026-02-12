@@ -1,4 +1,4 @@
-import { Address } from '../../app/shared/entities/address.interface';
+import { Address } from '@shared/entities/address.interface';
 import { EntityFactory } from './base/entity.factory'; // Import the abstract base class
 
 /**

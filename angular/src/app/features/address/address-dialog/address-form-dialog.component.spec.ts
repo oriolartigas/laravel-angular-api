@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
-import { UserService } from '../../../shared/services/user.service';
+import { UserService } from '@shared/services/entities/user.service';
 import { AddressFormDialogComponent } from './address-form-dialog.component';
 
 describe('AddressFormDialogComponent', () => {
