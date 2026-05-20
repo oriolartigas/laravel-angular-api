@@ -9,9 +9,6 @@
 #     - feature -> develop PRs
 #     - develop -> main PRs
 #
-# - push to develop:
-#   - Runs BUILD + DEPLOY to STAGING (typically after merging a PR into develop).
-#
 # - push to main:
 #   - Runs BUILD + DEPLOY to PRODUCTION (typically after merging a PR into main).
 #
